@@ -12,7 +12,6 @@ export class UserResolver {
   @Query(() => [UserDto])
   async userFindAll() {
     try {
-      // return await UserEntity.find();
       const find = await this.userService.findUser();
       return find || [];
     } catch (error) {
