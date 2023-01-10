@@ -3,8 +3,8 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  ManyToMany
-} from 'typeorm'
+  ManyToMany,
+} from 'typeorm';
 import { RoleEntity } from '../role/role.entity';
 
 /**

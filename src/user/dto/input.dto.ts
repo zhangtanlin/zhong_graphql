@@ -1,11 +1,10 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType } from '@nestjs/graphql';
 
 /**
  * 新增
  */
 @InputType()
 export class UserInputDto {
-
   @Field()
   account: string;
 
@@ -71,5 +70,4 @@ export class UserInputDto {
 
   @Field()
   firm: string;
-
 }

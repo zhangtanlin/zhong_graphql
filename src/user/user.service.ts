@@ -4,16 +4,15 @@ import { RoleService } from 'src/role/role.service';
 import { Repository } from 'typeorm';
 import { UserDto } from './dto/dto';
 import { UserEntity } from './user.entity';
-import { objArrayRepeat } from '../common/utils/tool'
+import { objArrayRepeat } from '../common/utils/tool';
 
 @Injectable()
 export class UserService {
-
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly roleService: RoleService
-  ) { }
+    private readonly roleService: RoleService,
+  ) {}
 
   /**
    * 新增
@@ -25,7 +24,7 @@ export class UserService {
     try {
       return;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -40,7 +39,9 @@ export class UserService {
       const find: UserEntity[] = await this.userRepository.find();
       if (find.length) {
         for (const iterator of find) {
-          let tempFindByIds, tempDto = {}, tempResourcesDto = [];
+          let tempFindByIds = [],
+            tempDto = {},
+            tempResourcesDto = [];
           if (iterator.roles) {
             const tempIds = iterator.roles.split(',').map(Number);
             tempFindByIds = await this.roleService.findByIds(tempIds);
@@ -51,14 +52,31 @@ export class UserService {
               }
             }
           }
-          tempDto = { ...iterator, roles: tempFindByIds || [], resources: tempResourcesDto || [] };
+          tempDto = {
+            ...iterator,
+            roles: tempFindByIds || [],
+            resources: tempResourcesDto || [],
+          };
           cb.push(tempDto);
         }
         return cb;
       }
       return [];
     } catch (error) {
-      throw error
+      throw error;
+    }
+  }
+
+  /**
+   * 根据id查询一条数据
+   * @function id 查询的id
+   */
+  async findOneById(id: number): Promise<UserEntity> {
+    try {
+      const _user: UserEntity = await this.userRepository.findOneBy({ id });
+      return _user;
+    } catch (error) {
+      throw error;
     }
   }
 }

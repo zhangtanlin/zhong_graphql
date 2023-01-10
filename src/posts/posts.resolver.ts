@@ -1,5 +1,4 @@
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Arg } from 'type-graphql';
+import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
 import { PostsDto } from './dto/posts.dto';
 import { PostsInputDto } from './dto/posts.input.dto';
 import { PostsEntity } from './posts.entity';
@@ -7,10 +6,7 @@ import { PostsService } from './posts.service';
 
 @Resolver()
 export class PostsResolver {
-
-  constructor(
-    private readonly postsService: PostsService,
-  ) { }
+  constructor(private readonly postsService: PostsService) {}
 
   // 测试
   @Query(() => String)
@@ -27,7 +23,7 @@ export class PostsResolver {
     try {
       return await PostsEntity.find();
     } catch (error) {
-      return ['错误']
+      return ['错误'];
     }
   }
   /**
@@ -35,24 +31,24 @@ export class PostsResolver {
    * @return PostsDto 根据grqphql模式返回
    */
   @Query(() => PostsDto)
-  async postsFindOneById(_, @Arg('id') id: number) {
+  async postsFindOneById(_, @Args('id') id: number) {
     try {
-      return await PostsEntity.findOne(id);
+      return await this.postsService.findOneById(id);
     } catch (error) {
-      return ['错误']
+      return ['错误'];
     }
   }
 
   /**
    * 新增
-   * @param account  参数邮箱 
-   * @param password 参数密码 
+   * @param account  参数邮箱
+   * @param password 参数密码
    * @param _        参数占位符
    * @param Arg      参数-前端传过来的
    */
   @Mutation(() => PostsDto)
-  async createPosts(_, @Arg('postsInputDto') postsInputDto: PostsInputDto) {
-    const create = await PostsEntity.create(postsInputDto).save()
+  async createPosts(_, @Args('postsInputDto') postsInputDto: PostsInputDto) {
+    const create = await this.postsService.create(postsInputDto);
     return create;
   }
 }

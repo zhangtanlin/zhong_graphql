@@ -1,5 +1,4 @@
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Arg } from 'type-graphql';
+import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
 import { ResourceDto } from './dto/dto';
 import { ResourceInputDto } from './dto/input.dto';
 import { ResourceEntity } from './resource.entity';
@@ -7,10 +6,7 @@ import { ResourceService } from './resource.service';
 
 @Resolver()
 export class ResourceResolver {
-
-  constructor(
-    private readonly resourceService: ResourceService,
-  ) { }
+  constructor(private readonly resourceService: ResourceService) {}
 
   // 查询所有
   @Query(() => [ResourceDto])
@@ -18,30 +14,35 @@ export class ResourceResolver {
     try {
       return await ResourceEntity.find();
     } catch (error) {
-      return ['错误']
+      return ['错误'];
     }
   }
 
   // 查询一条
   @Query(() => ResourceDto)
-  async resourceFindOneById(_, @Arg('id') id: number) {
+  async resourceFindOneById(_, @Args('id') id: number) {
     try {
-      return await ResourceEntity.findOne(id);
+      return await this.resourceService.findOneById(id);
     } catch (error) {
-      return ['错误']
+      return ['错误'];
     }
   }
 
   /**
    * 新增
-   * @param account  参数邮箱 
-   * @param password 参数密码 
+   * @param account  参数邮箱
+   * @param password 参数密码
    * @param _        参数占位符
    * @param Arg      参数-前端传过来的
    */
   @Mutation(() => ResourceDto)
-  async resourceCreate(_, @Arg('resourceInputDto') resourceInputDto: ResourceInputDto) {
-    const create = await ResourceEntity.create(resourceInputDto).save()
+  async resourceCreate(
+    _,
+    @Args('resourceInputDto') resourceInputDto: ResourceInputDto,
+  ) {
+    const create = await ResourceEntity.create(
+      resourceInputDto as ResourceEntity,
+    );
     if (create) {
       return true;
     }

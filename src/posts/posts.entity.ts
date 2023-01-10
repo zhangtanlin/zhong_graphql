@@ -1,5 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 /**
  * 数据表
@@ -10,25 +9,21 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
  */
 @Entity('posts')
 export class PostsEntity extends BaseEntity {
-
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
-  @Column(
-    {
-      type: 'varchar',
-      length: 255,
-      unique: true,
-      default: ''
-    },
-  )
+  @Column({
+    type: 'varchar',
+    length: 255,
+    unique: true,
+    default: '',
+  })
   account: string;
 
   @Column({
     type: 'varchar',
     length: 255,
-    default: ''
+    default: '',
   })
   password: string;
-
 }

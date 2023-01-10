@@ -6,7 +6,6 @@ import { ResourceDto } from 'src/resource/dto/dto';
  */
 @ObjectType()
 export class RoleDto {
-
   @Field(() => ID)
   id: number;
 
@@ -21,7 +20,7 @@ export class RoleDto {
 
   @Field()
   defaultFlag: number;
-  
+
   @Field()
-  resources: [ResourceDto]
+  resources: [ResourceDto];
 }

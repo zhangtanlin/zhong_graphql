@@ -1,11 +1,10 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType } from '@nestjs/graphql';
 
 /**
  * 新增
  */
 @InputType()
 export class RoleInputDto {
-
   @Field()
   name: string;
 
@@ -19,5 +18,5 @@ export class RoleInputDto {
   defaultFlag: number;
 
   @Field()
-  resources: string
+  resources: string;
 }

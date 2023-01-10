@@ -5,10 +5,8 @@ import { ResourceResolver } from './resource.resolver';
 import { ResourceService } from './resource.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ResourceEntity])
-  ],
+  imports: [TypeOrmModule.forFeature([ResourceEntity])],
   providers: [ResourceResolver, ResourceService],
-  exports: [ResourceService]
+  exports: [ResourceService],
 })
-export class ResourceModule { }
+export class ResourceModule {}

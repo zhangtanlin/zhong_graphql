@@ -5,7 +5,6 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
  */
 @ObjectType()
 export class ResourceDto {
-
   @Field(() => ID)
   id: number;
 

@@ -5,40 +5,41 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
 import { UserModule } from './user/user.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 // entity
-import allEntity from './common/allEntity'
+import allEntity from './common/allEntity';
 
 @Module({
   imports: [
     /**
      * 导入
-     * @require GraphQLModule graphql模块 
-     * @require AuthorsModule 作者 
+     * @require GraphQLModule graphql模块
+     * @require AuthorsModule 作者
      * @require PostsModule   帖子
      */
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'root',
-      password: '123456',
+      username: 'mysql8_admin',
+      password: 'Qaz@123456',
       database: 'website',
       entities: allEntity,
-      synchronize: true
+      synchronize: true,
     }),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      installSubscriptionHandlers: true,
       // 代码优先
       // autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       // sortSchema: true,
-      /**
-       * 架构优先
-       */
+      // 架构优先
       typePaths: ['./**/*.graphql'],
     }),
     PostsModule,
-    UserModule
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

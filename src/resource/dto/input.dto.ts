@@ -1,11 +1,10 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType } from '@nestjs/graphql';
 
 /**
  * 新增
  */
 @InputType()
 export class ResourceInputDto {
-
   @Field()
   pid: number;
 

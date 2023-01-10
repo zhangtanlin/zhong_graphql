@@ -6,7 +6,6 @@ import { RoleDto } from 'src/role/dto/dto';
  */
 @ObjectType()
 export class UserDto {
-
   @Field(() => ID)
   id: number;
 
@@ -75,5 +74,4 @@ export class UserDto {
 
   @Field()
   firm: string;
-
 }
