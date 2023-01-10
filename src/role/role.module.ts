@@ -9,11 +9,10 @@ import { RoleService } from './role.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([RoleEntity]),
-    TypeOrmModule.forFeature([ResourceEntity]),
-    ResourceModule
+    TypeOrmModule.forFeature([RoleEntity, ResourceEntity]),
+    ResourceModule,
   ],
   providers: [RoleResolver, RoleService, ResourceService],
-  exports: [RoleService]
+  exports: [RoleService],
 })
-export class RoleModule { }
+export class RoleModule {}
