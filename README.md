@@ -63,6 +63,10 @@ $ npm run test:cov
     	roles {
         id
         name
+        resources {
+          id
+          name
+        }
       }
     }
   }
