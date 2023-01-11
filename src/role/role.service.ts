@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ResourceService } from '../resource/resource.service';
 import { In, Repository } from 'typeorm';
@@ -24,7 +24,7 @@ export class RoleService {
       const _role: RoleEntity = await this.roleRepository.save(data);
       return _role;
     } catch (error) {
-      throw error;
+      throw new HttpException({ message: '新增角色' }, 502);
     }
   }
 
@@ -53,7 +53,7 @@ export class RoleService {
       }
       return cb;
     } catch (error) {
-      throw error;
+      throw new HttpException({ message: '查询所有角色失败' }, 502);
     }
   }
 
@@ -66,12 +66,13 @@ export class RoleService {
       const _user: RoleEntity = await this.roleRepository.findOneBy({ id });
       return _user;
     } catch (error) {
-      throw error;
+      throw new HttpException({ message: '根据id查询角色失败' }, 502);
     }
   }
 
   /**
    * 根据id数组查询数据
+   * @param {number[]} [ids] id数组
    */
   async findByIds(ids: number[]): Promise<RoleDto[]> {
     try {
@@ -95,7 +96,7 @@ export class RoleService {
       }
       return cb;
     } catch (error) {
-      throw error;
+      throw new HttpException({ message: '根据id数组查询角色失败' }, 502);
     }
   }
 }

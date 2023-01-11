@@ -1,0 +1,37 @@
+# 注意:有这个文件表示用的是模式优先.
+
+# 返回值
+type AdDto {
+  id: ID
+  name: String!
+  type: Int!
+  src: String!
+  link: String!
+  status: Int!
+  explanation: String!
+}
+
+# 查询
+# adFindAll     查询所有
+# findOneById 根据id查询
+type Query {
+  adFindAll(
+    page: Int,
+    size: Int,
+    type: Int!,
+  ): [AdDto],
+  adFindOneById(id: ID): AdDto,
+}
+
+# 操作
+# adCreate 创建数据
+type Mutation {
+  adCreate(
+    name: String
+    type: Int
+    src: String
+    link: String
+    status: Int
+    explanation: String
+  ): AdDto!
+}

@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ErrorFilter } from './common/filter/error.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -32,6 +33,9 @@ async function bootstrap() {
     credentials: true,
     optionsSuccessStatus: 200,
   });
+
+  // 全局错误过滤
+  app.useGlobalFilters(new ErrorFilter());
 
   // 绑定端口号
   await app.listen(port);

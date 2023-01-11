@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common';
 import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
 import { PostsDto } from './dto/posts.dto';
 import { PostsInputDto } from './dto/posts.input.dto';
@@ -21,9 +22,10 @@ export class PostsResolver {
   @Query(() => [PostsDto])
   async postsFindAll() {
     try {
-      return await PostsEntity.find();
+      const _res = await PostsEntity.find();
+      return _res;
     } catch (error) {
-      return ['错误'];
+      throw new HttpException({ message: '查询所有数据失败' }, 502);
     }
   }
   /**
@@ -35,7 +37,7 @@ export class PostsResolver {
     try {
       return await this.postsService.findOneById(id);
     } catch (error) {
-      return ['错误'];
+      throw new HttpException({ message: '根据id查询一条数据失败' }, 502);
     }
   }
 

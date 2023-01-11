@@ -9,6 +9,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 // entity
 import allEntity from './common/allEntity';
+import { join } from 'path';
 
 @Module({
   imports: [

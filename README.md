@@ -1,36 +1,28 @@
 
 ## 说明
-
 学习nestjs+typeorm+graphql的架构模式
 
 ## 安装
-
 ```bash
 $ npm install
 ```
 
 ## 运行
-
 ```bash
 # 开发环境
 $ npm run start
-
 # 开发环境监听模式
 $ npm run start:dev
-
 # 生产环境
 $ npm run start:prod
 ```
 
 ## 测试
-
 ```bash
 # 单元测试
 $ npm run test
-
 # e2e 测试
 $ npm run test:e2e
-
 # test coverage
 $ npm run test:cov
 ```
@@ -83,11 +75,12 @@ $ npm run test:cov
   }
 ```
 
-## 联系方式
+## 注意
+- graphql和tsx的数据类型区别:xx.graphql文件使用的是String/Int/Date……,但tsx文件使用string/number…….
 
+## 联系方式
 - 作者 - [苴国仲霖](https://juguozhonglin.com)
 - qq - [136179160](https://juguozhonglin.com/)
 
 ## 执照
-
   Nest is [MIT licensed](LICENSE).
