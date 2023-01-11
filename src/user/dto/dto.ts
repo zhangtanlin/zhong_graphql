@@ -34,13 +34,13 @@ export class UserDto {
   area_id: string;
 
   @Field()
-  roles: [RoleDto];
+  roles: RoleDto[];
 
   @Field()
   status: number;
 
   @Field()
-  activate_time: string;
+  activate_time: Date;
 
   @Field()
   is_first_login: number;
@@ -49,25 +49,25 @@ export class UserDto {
   is_locked: number;
 
   @Field()
-  locked_time: string;
+  locked_time: Date;
 
   @Field()
   is_disabled: number;
 
   @Field()
-  disabled_time: string;
+  disabled_time: Date;
 
   @Field()
   last_login_ip: string;
 
   @Field()
-  last_login_time: string;
+  last_login_time: Date;
 
   @Field()
-  last_update_password_time: string;
+  last_update_password_time: Date;
 
   @Field()
-  create_time: string;
+  create_time: Date;
 
   @Field()
   department: string;

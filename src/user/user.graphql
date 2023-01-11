@@ -11,8 +11,8 @@ type UserDto {
   email: String!
   age: String!
   area_id: String!
-  roles: [RoleDto]
-  resources: [ResourceDto]
+  roles: [UserDto!]!
+  resources: [UserDto!]!
   status: String!
   activate_time: String!
   is_first_login: String!
@@ -34,7 +34,7 @@ type UserDto {
 type Query {
   user: String!
   userFindAll: [UserDto]
-  userFindOneById(id: ID): UserDto
+  userFindOneById(id: ID): UserDto,
 }
 
 # 操作
@@ -42,6 +42,6 @@ type Query {
 type Mutation {
   userCreate(
     account: String,
-    password: String
+    password: String,
   ): UserDto!
 }

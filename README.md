@@ -54,6 +54,18 @@ $ npm run test:cov
       password
     }
   }
+  或者:
+  {
+    userFindOneById(id:1) {
+      id
+      account
+      password
+    	roles {
+        id
+        name
+      }
+    }
+  }
 3.新增一条:
   mutation {
     createPosts(

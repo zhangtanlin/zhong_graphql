@@ -71,10 +71,23 @@ export class UserService {
    * 根据id查询一条数据
    * @function id 查询的id
    */
-  async findOneById(id: number): Promise<UserEntity> {
+  async findOneById(id: number): Promise<UserDto> {
     try {
+      // 根据用户id查询用户数据
       const _user: UserEntity = await this.userRepository.findOneBy({ id });
-      return _user;
+      // 根据用户角色列表查询角色信息
+      const _rolesStrList: string[] = _user.roles.split(',');
+      const roleIdArray: number[] = [];
+      _rolesStrList.forEach((item: string) => {
+        const _item = parseInt(item);
+        roleIdArray.push(_item);
+      });
+      const roleArray = await this.roleService.findByIds(roleIdArray);
+      const cb: UserDto = {
+        ..._user,
+        ...{ roles: roleArray },
+      };
+      return cb;
     } catch (error) {
       throw error;
     }

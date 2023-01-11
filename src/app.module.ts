@@ -35,17 +35,11 @@ import allEntity from './common/allEntity';
       useFactory: async (
         configService: ConfigService,
       ): Promise<TypeOrmModuleOptions> => {
-        console.log('configService', configService);
         const tempHost: string = await configService.get('MYSQL_HOST');
-        console.log('tempHost', tempHost);
         const tempPort: number = await configService.get('MYSQL_PORT');
-        console.log('tempPort', tempPort);
         const tempUser: string = await configService.get('MYSQL_USER');
-        console.log('tempUser', tempUser);
         const tempPassword: string = await configService.get('MYSQL_PASSWORD');
-        console.log('tempPassword', tempPassword);
         const tempName: string = await configService.get('MYSQL_NAME');
-        console.log('tempName', tempName);
         return {
           type: 'mysql',
           host: tempHost,
