@@ -8,14 +8,14 @@ import { Max, Min } from 'class-validator';
 @ArgsType()
 export class AdSearchDto {
   @Field(() => Int, { nullable: true })
-  type?: number;
+  readonly type?: number;
 
   @Field(() => Int)
   @Min(1)
-  page: number;
+  readonly page: number;
 
   @Field(() => Int)
   @Min(5)
   @Max(30)
-  size = 10;
+  readonly size = 10;
 }

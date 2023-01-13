@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleService } from 'src/role/role.service';
 import { Repository } from 'typeorm';
-import { UserDto } from './dto/dto';
 import { UserEntity } from './user.entity';
-import { objArrayRepeat } from '../common/utils/tool';
+import { UserCreateInput } from './dto/input/user.create.input';
+import { PagingArgs } from 'src/common/dto/paging.args';
 
 @Injectable()
 export class UserService {
@@ -16,54 +16,29 @@ export class UserService {
 
   /**
    * 新增
-   * @class [UserInsertDto]     新增用户dto
-   * @function findOneByAccount 验证账号是否存在
+   * @class [UserCreateDto] 新增用户dto
+   * @function createUser   验证账号是否存在
    * @function save             保存用户信息
    */
-  async createUser(): Promise<UserDto> {
+  async createUser(userCreateDto: UserCreateInput): Promise<UserEntity> {
     try {
-      return;
+      const _data: UserCreateInput = {
+        ...userCreateDto,
+      };
+      const _user = await this.userRepository.save(_data);
+      return _user;
     } catch (error) {
-      throw error;
+      throw new HttpException({ message: '新增用户失败' }, 502);
     }
   }
 
-  /**
-   * 查询所有
-   * @function roleFindByIds  根据id数组查询数据
-   * @function objArrayRepeat 对象数组去重roleFindByIds
-   */
-  async findUser(): Promise<UserDto[]> {
+  // 查询所有
+  async findAll(): Promise<UserEntity[]> {
     try {
-      const cb = [];
-      const find: UserEntity[] = await this.userRepository.find();
-      if (find.length) {
-        for (const iterator of find) {
-          let tempFindByIds = [],
-            tempDto = {},
-            tempResourcesDto = [];
-          if (iterator.roles) {
-            const tempIds = iterator.roles.split(',').map(Number);
-            tempFindByIds = await this.roleService.findByIds(tempIds);
-            if (tempFindByIds.length) {
-              for (const i of tempFindByIds) {
-                const aaa = tempResourcesDto.concat(i.resources);
-                tempResourcesDto = await objArrayRepeat(aaa);
-              }
-            }
-          }
-          tempDto = {
-            ...iterator,
-            roles: tempFindByIds || [],
-            resources: tempResourcesDto || [],
-          };
-          cb.push(tempDto);
-        }
-        return cb;
-      }
-      return [];
+      const _res: UserEntity[] = await this.userRepository.find();
+      return _res;
     } catch (error) {
-      throw error;
+      throw new HttpException({ message: '查询所有用户失败' }, 502);
     }
   }
 
@@ -71,25 +46,29 @@ export class UserService {
    * 根据id查询一条数据
    * @function id 查询的id
    */
-  async findOneById(id: number): Promise<UserDto> {
+  async findOneById(id: number): Promise<UserEntity> {
     try {
       // 根据用户id查询用户数据
       const _user: UserEntity = await this.userRepository.findOneBy({ id });
-      // 根据用户角色列表查询角色信息
-      const _rolesStrList: string[] = _user.roles.split(',');
-      const roleIdArray: number[] = [];
-      _rolesStrList.forEach((item: string) => {
-        const _item = parseInt(item);
-        roleIdArray.push(_item);
-      });
-      const roleArray = await this.roleService.findByIds(roleIdArray);
-      const cb: UserDto = {
-        ..._user,
-        ...{ roles: roleArray },
-      };
-      return cb;
+      return _user;
     } catch (error) {
-      throw error;
+      throw new HttpException({ message: '根据id查询用户失败' }, 502);
+    }
+  }
+
+  // 分页查询
+  async findByPaging(pagingArgs: PagingArgs): Promise<UserEntity[]> {
+    try {
+      const _skip: number = (pagingArgs.page - 1) * pagingArgs.size;
+      const _take: number = pagingArgs.size;
+      const _list: UserEntity[] = await this.userRepository
+        .createQueryBuilder('user')
+        .skip(_skip)
+        .take(_take)
+        .getMany();
+      return _list;
+    } catch (error) {
+      throw new HttpException({ message: '分页查询失败' }, 502);
     }
   }
 }

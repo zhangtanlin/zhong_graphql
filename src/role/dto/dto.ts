@@ -20,7 +20,4 @@ export class RoleDto {
 
   @Field()
   defaultFlag: number;
-
-  @Field()
-  resources: [ResourceDto];
 }

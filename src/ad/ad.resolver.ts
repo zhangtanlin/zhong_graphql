@@ -1,6 +1,7 @@
 import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
 import { AdService } from './ad.service';
 import { AdInputDto } from './dto/ad.input.dto';
+import { AdPagingResultDto } from './dto/ad.paging.dto';
 import { AdSearchDto } from './dto/ad.search.dto';
 
 @Resolver()
@@ -9,7 +10,9 @@ export class AdResolver {
 
   // 分页查询
   @Query(() => [AdSearchDto])
-  async adFindAll(@Args('params') params: AdSearchDto): Promise<ListTotalType> {
+  async adFindAll(
+    @Args('params') params: AdSearchDto,
+  ): Promise<AdPagingResultDto> {
     console.log('params', params);
     console.log('params1', params.page);
     console.log('params2', params.size);

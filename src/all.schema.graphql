@@ -1,0 +1,124 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  createPosts(postsInputDto: PostsInputDto!): PostsDto!
+  resourceCreate(resourceInputDto: ResourceInputDto!): ResourceDto!
+  roleCreate(inputDto: RoleInputDto!): RoleDto!
+  userCreate(userCreateDto: UserCreateInput!): UserEntity!
+}
+
+type PostsDto {
+  account: String!
+  id: ID!
+  password: String!
+}
+
+input PostsInputDto {
+  account: String!
+  password: String!
+}
+
+type Query {
+  posts: String!
+  postsFindAll: [PostsDto!]!
+  postsFindOneById(id: Float!): PostsDto!
+  resourceFindAll: [ResourceDto!]!
+  resourceFindOneById(id: Float!): ResourceDto!
+  roleFindAll: [RoleDto!]!
+  roleFindOneById(id: Float!): RoleDto!
+  userFindAll: [UserEntity!]!
+  userFindByPaging(page: Int!, size: Int = 10): [UserEntity!]!
+  userFindOneById(id: Float!): UserEntity!
+}
+
+type ResourceDto {
+  alias: String!
+  description: String!
+  href: String!
+  icon: String!
+  id: ID!
+  isNavigation: Float!
+  isShow: Float!
+  name: String!
+  permission: String!
+  pid: Float!
+  target: String!
+  type: Float!
+}
+
+input ResourceInputDto {
+  alias: String!
+  description: String!
+  href: String!
+  icon: String!
+  isNavigation: Float!
+  isShow: Float!
+  name: String!
+  permission: String!
+  pid: Float!
+  target: String!
+  type: Float!
+}
+
+type RoleDto {
+  defaultFlag: Float!
+  description: String!
+  id: ID!
+  name: String!
+  roleType: Float!
+}
+
+input RoleInputDto {
+  defaultFlag: Float!
+  description: String!
+  name: String!
+  resources: String!
+  roleType: Float!
+}
+
+input UserCreateInput {
+  account: String!
+  age: Int
+  area_id: String
+  avatar: String
+  department: String
+  email: String
+  firm: String
+  name: String
+  password: String!
+  phone: String
+  status: Int
+}
+
+type UserEntity {
+  account: String!
+  activate_time: DateTime
+  age: Int
+  area_id: String
+  avatar: String
+  create_time: DateTime
+  department: String
+  disabled_time: DateTime
+  email: String
+  firm: String
+  id: Int!
+  is_disabled: Int
+  is_first_login: Int
+  is_locked: Int
+  last_login_ip: String
+  last_login_time: DateTime
+  last_update_password_time: DateTime
+  locked_time: DateTime
+  name: String
+  password: String!
+  phone: String
+  roles: String
+  status: Int
+}

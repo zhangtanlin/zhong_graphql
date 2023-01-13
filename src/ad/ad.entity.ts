@@ -9,10 +9,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('ad')
 // 广告数据表
 export class AdEntity {
-  /**
-   * id
-   * @param {number} [id] 自增id
-   */
+  // 自增id
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;

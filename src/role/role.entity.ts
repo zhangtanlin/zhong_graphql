@@ -1,11 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToMany
-} from 'typeorm'
-import { UserEntity } from '../user/user.entity';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 /**
  * 数据表
@@ -15,15 +8,15 @@ import { UserEntity } from '../user/user.entity';
 export class RoleEntity extends BaseEntity {
   // 用户id(自增id)
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   // 名称
   @Column({
     type: 'varchar',
     length: 255,
-    default: ''
+    default: '',
   })
-  name: string
+  name: string;
 
   // 类型【 0 ：超级管理员， 1 ：系统管理员， 2 ：操作员， 3 ：审计员】
   @Column({
@@ -44,7 +37,7 @@ export class RoleEntity extends BaseEntity {
     default: 0,
   })
   defaultFlag: number;
-  
+
   // 角色对应的资源[用逗号分割的资源id组成的字符串]
   @Column({
     name: 'resources',

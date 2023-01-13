@@ -78,6 +78,10 @@ $ npm run test:cov
 ## 注意
 - graphql和tsx的数据类型区别:xx.graphql文件使用的是String/Int/Date……,但tsx文件使用string/number…….
 
+## 学习文档
+- [中文文档](http://static.kancloud.cn/juukee/nestjs/2666734)
+- [参考使用文档](https://www.programcreek.com/typescript/?code=Sairyss%2Fdomain-driven-hexagon%2Fdomain-driven-hexagon-master%2Fsrc%2Fmodules%2Fuser%2Fqueries%2Ffind-users%2Ffind-users.graphql-resolver.ts#)
+
 ## 联系方式
 - 作者 - [苴国仲霖](https://juguozhonglin.com)
 - qq - [136179160](https://juguozhonglin.com/)

@@ -86,21 +86,23 @@ export class AdService {
    * @param {object} [data] 含有列表和总条数的对象返回值
    * @function [list] typeorm的模糊查询+统计
    */
-  async getManyAndCount(params: AdSearchDto): Promise<ListTotalType> {
+  async getManyAndCount(params: AdSearchDto): Promise<any> {
     const data = {
       list: [],
       total: 0,
     };
     try {
+      const _parameters = {
+        type: `%${params.type ? params.type : ''}%`,
+      };
+      const _skip = (params.page - 1) * params.size;
+      const _take = params.size;
       const _list = await this.adRepository
         .createQueryBuilder('ad')
         .where('user.type like :type')
-        .setParameters({
-          // 类型
-          account: `%${params.type ? params.type : ''}%`,
-        })
-        .skip((params.page - 1) * params.size)
-        .take(params.size)
+        .setParameters(_parameters)
+        .skip(_skip)
+        .take(_take)
         .getManyAndCount();
       console.log('list', _list);
       data.list = _list[0];
