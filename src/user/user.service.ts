@@ -50,7 +50,7 @@ export class UserService {
   /**
    * 根据id查询一条数据
    * @function id 查询的id
-   * @description 注意这里可以使用 findOne 和 findOneOrFail 两种方式(参数一致),取舍又自己考量.
+   * @description 注意这里可以使用[findOne]和[findOneOrFail]两种方式(参数一致),建议使用[findOneOrFail].
    */
   async findOneById(id: number): Promise<UserEntity> {
     try {
