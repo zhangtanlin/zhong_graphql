@@ -1,5 +1,4 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { ResourceDto } from 'src/resource/dto/dto';
 
 /**
  * 查询

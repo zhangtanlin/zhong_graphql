@@ -1,4 +1,6 @@
+import { HttpException } from '@nestjs/common';
 import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
+import { IdsDto } from 'src/common/dto/id.dto';
 import { RoleDto } from './dto/dto';
 import { RoleInputDto } from './dto/input.dto';
 import { RoleEntity } from './role.entity';
@@ -37,7 +39,7 @@ export class RoleResolver {
    * @param Arg      参数-前端传过来的
    */
   @Mutation(() => RoleDto)
-  async roleCreate(_, @Args('inputDto') inputDto: RoleInputDto) {
+  async roleCreate(@Args('inputDto') inputDto: RoleInputDto) {
     const create = await this.roleService.create(inputDto as RoleEntity);
     return create;
   }

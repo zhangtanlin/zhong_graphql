@@ -1,6 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import * as Moment from 'moment';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { RoleEntity } from 'src/role/role.entity';
 
 /**
  * 数据表
@@ -205,4 +212,10 @@ export class UserEntity {
     default: '',
   })
   firm: string;
+
+  // 角色列表
+  @Field(() => [RoleEntity], { nullable: true })
+  @OneToMany(() => RoleEntity, (role) => role.user)
+  @JoinColumn({ name: 'user_roles' })
+  roleList: RoleEntity[];
 }

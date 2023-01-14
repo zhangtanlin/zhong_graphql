@@ -36,6 +36,10 @@ $ npm run test:cov
       id
       account
       password
+      roleList {
+        id
+        name
+      }
     }
   }
 2.查询一条:

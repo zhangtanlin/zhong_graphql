@@ -75,6 +75,16 @@ type RoleDto {
   roleType: Float!
 }
 
+type RoleEntity {
+  defaultFlag: Int
+  description: String
+  id: Int
+  name: String
+  resources: String
+  roleType: Int
+  user: UserEntity
+}
+
 input RoleInputDto {
   defaultFlag: Float!
   description: String!
@@ -119,6 +129,7 @@ type UserEntity {
   name: String
   password: String!
   phone: String
+  roleList: [RoleEntity!]
   roles: String
   status: Int
 }

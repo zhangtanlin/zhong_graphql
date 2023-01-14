@@ -74,7 +74,7 @@ export class RoleService {
    * 根据id数组查询数据
    * @param {number[]} [ids] id数组
    */
-  async findByIds(ids: number[]): Promise<RoleDto[]> {
+  async findByIds(ids: string[]): Promise<RoleDto[]> {
     try {
       const cb = [];
       const roleFindByIds: RoleEntity[] = await this.roleRepository.findBy({

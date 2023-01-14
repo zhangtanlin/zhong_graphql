@@ -32,10 +32,15 @@ export class UserService {
     }
   }
 
-  // 查询所有
+  /**
+   * 查询所有
+   * @descript 注意这里的查询方法是能够查询到一对多的数据的
+   */
   async findAll(): Promise<UserEntity[]> {
     try {
-      const _res: UserEntity[] = await this.userRepository.find();
+      const _res: UserEntity[] = await this.userRepository.find({
+        relations: ['roleList'],
+      });
       return _res;
     } catch (error) {
       throw new HttpException({ message: '查询所有用户失败' }, 502);
@@ -49,7 +54,10 @@ export class UserService {
   async findOneById(id: number): Promise<UserEntity> {
     try {
       // 根据用户id查询用户数据
-      const _user: UserEntity = await this.userRepository.findOneBy({ id });
+      const _user: UserEntity = await this.userRepository.findOne({
+        where: { id },
+        relations: ['roleList'],
+      });
       return _user;
     } catch (error) {
       throw new HttpException({ message: '根据id查询用户失败' }, 502);

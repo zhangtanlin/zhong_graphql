@@ -6,7 +6,13 @@ import { ArgsType, Field, Int } from '@nestjs/graphql';
  */
 @ArgsType()
 export class IdDto {
-  // id
-  @Field(() => Int, { nullable: true })
-  readonly page: number;
+  @Field(() => Int)
+  readonly id: number;
+}
+
+// id数组查询dto验证
+@ArgsType()
+export class IdsDto {
+  @Field(() => [Int])
+  readonly id: number[];
 }
