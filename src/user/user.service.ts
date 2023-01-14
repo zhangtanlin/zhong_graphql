@@ -50,11 +50,12 @@ export class UserService {
   /**
    * 根据id查询一条数据
    * @function id 查询的id
+   * @description 注意这里可以使用 findOne 和 findOneOrFail 两种方式(参数一致),取舍又自己考量.
    */
   async findOneById(id: number): Promise<UserEntity> {
     try {
       // 根据用户id查询用户数据
-      const _user: UserEntity = await this.userRepository.findOne({
+      const _user: UserEntity = await this.userRepository.findOneOrFail({
         where: { id },
         relations: ['roleList'],
       });
