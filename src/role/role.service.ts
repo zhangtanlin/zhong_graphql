@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ResourceService } from '../resource/resource.service';
 import { In, Repository } from 'typeorm';
 import { RoleEntity } from './role.entity';
-import { RoleDto } from './dto/dto';
 
 @Injectable()
 export class RoleService {
@@ -74,7 +73,7 @@ export class RoleService {
    * 根据id数组查询数据
    * @param {number[]} [ids] id数组
    */
-  async findByIds(ids: string[]): Promise<RoleDto[]> {
+  async findByIds(ids: string[]): Promise<RoleEntity[]> {
     try {
       const cb = [];
       const roleFindByIds: RoleEntity[] = await this.roleRepository.findBy({

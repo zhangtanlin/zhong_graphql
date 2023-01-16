@@ -60,3 +60,6 @@ yarn-error.log
 /packages/graphql
 /benchmarks/memory
 build/config\.gypi
+
+# 排除公钥私钥文件夹
+/ssh/*

@@ -1,6 +1,8 @@
 import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
 import { PagingArgs } from 'src/common/dto/paging.args';
-import { UserCreateInput } from './dto/input/user.create.input';
+import { UserCreateInput } from './dto/user.create.input';
+import { UserLoginInput } from './dto/user.login.input';
+import { UserLoginResult } from './dto/user.login.result';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
@@ -27,6 +29,12 @@ export class UserResolver {
   @Query(() => UserEntity)
   async userFindOneById(@Args('id') id: number) {
     return await this.userService.findOneById(id);
+  }
+
+  // 登录
+  @Query(() => UserLoginResult)
+  async login(@Args('userLoginInput') userLoginInput: UserLoginInput) {
+    return await this.userService.login(userLoginInput);
   }
 
   /**

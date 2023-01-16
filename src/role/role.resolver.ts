@@ -1,8 +1,6 @@
-import { HttpException } from '@nestjs/common';
 import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
-import { IdsDto } from 'src/common/dto/id.dto';
-import { RoleDto } from './dto/dto';
-import { RoleInputDto } from './dto/input.dto';
+import { UserEntity } from 'src/user/user.entity';
+import { RoleCreateInput } from './dto/role.create.input';
 import { RoleEntity } from './role.entity';
 import { RoleService } from './role.service';
 
@@ -11,24 +9,15 @@ export class RoleResolver {
   constructor(private readonly roleService: RoleService) {}
 
   // 查询所有
-  @Query(() => [RoleDto])
+  @Query(() => [RoleEntity])
   async roleFindAll() {
-    try {
-      const find = await this.roleService.findAll();
-      return find || [];
-    } catch (error) {
-      return ['错误'];
-    }
+    return await this.roleService.findAll();
   }
 
   // 查询一条
-  @Query(() => RoleDto)
-  async roleFindOneById(_, @Args('id') id: number) {
-    try {
-      return await this.roleService.findOneById(id);
-    } catch (error) {
-      return ['错误'];
-    }
+  @Query(() => RoleEntity)
+  async roleFindOneById(@Args('id') id: number) {
+    return await this.roleService.findOneById(id);
   }
 
   /**
@@ -38,9 +27,14 @@ export class RoleResolver {
    * @param _        参数占位符
    * @param Arg      参数-前端传过来的
    */
-  @Mutation(() => RoleDto)
-  async roleCreate(@Args('inputDto') inputDto: RoleInputDto) {
-    const create = await this.roleService.create(inputDto as RoleEntity);
+  @Mutation(() => RoleEntity)
+  async roleCreate(@Args('roleCreateInput') roleCreateInput: RoleCreateInput) {
+    const _user = new UserEntity();
+    _user.account = 'test1';
+    const _role = new RoleEntity();
+    _role.name = roleCreateInput.name;
+    _role.userList = [_user];
+    const create = await this.roleService.create(_role);
     return create;
   }
 }

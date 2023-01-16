@@ -1,10 +1,8 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-/**
- * 新增
- */
+// 新增
 @InputType()
-export class RoleInputDto {
+export class RoleCreateInput {
   @Field()
   name: string;
 

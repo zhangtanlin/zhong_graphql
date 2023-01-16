@@ -1,10 +1,8 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
 
-/**
- * 查询
- */
-@ObjectType()
-export class RoleDto {
+// 查询
+@ArgsType()
+export class RoleSearchArgsDto {
   @Field(() => ID)
   id: number;
 

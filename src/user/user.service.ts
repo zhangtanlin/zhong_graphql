@@ -1,17 +1,21 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RoleService } from 'src/role/role.service';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { UserCreateInput } from './dto/input/user.create.input';
+import { UserCreateInput } from './dto/user.create.input';
 import { PagingArgs } from 'src/common/dto/paging.args';
+import { UserLoginInput } from './dto/user.login.input';
+import { UserLoginResult } from './dto/user.login.result';
+import { ConfigService } from '@nestjs/config';
+import { HmacSHA512 } from 'src/common/utils/cryptoData';
+import { RoleEntity } from 'src/role/role.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly roleService: RoleService,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -22,8 +26,22 @@ export class UserService {
    */
   async createUser(userCreateDto: UserCreateInput): Promise<UserEntity> {
     try {
+      // 设置资源
+      const _roleOne: RoleEntity = new RoleEntity();
+      _roleOne.id = 1;
+      const _roleList: RoleEntity[] = [_roleOne];
+      // 密码加密
+      userCreateDto.password = HmacSHA512({
+        type: 'sha512',
+        key: this.configService.get('TOKEN_KEY'),
+        data: userCreateDto.password,
+      });
+      // 设置插入数据
       const _data: UserCreateInput = {
         ...userCreateDto,
+        ...{
+          roleList: _roleList,
+        },
       };
       const _user = await this.userRepository.save(_data);
       return _user;
@@ -79,5 +97,37 @@ export class UserService {
     } catch (error) {
       throw new HttpException({ message: '分页查询失败' }, 502);
     }
+  }
+
+  /**
+   * 登陆
+   * @class [UserLoginDto] - 验证用户登陆参数的dto【用户名和密码】
+   * @callback 返回token字符串
+   */
+  async login(userLoginInput: UserLoginInput): Promise<UserLoginResult> {
+    // 验证account是否存在
+    const _user = { account: userLoginInput.account };
+    const findOneByAccount = await this.userRepository.findOne({
+      where: _user,
+    });
+    if (!findOneByAccount) {
+      throw new HttpException({ message: '账号不存在' }, 403);
+    }
+    // 验证用户名和密码是否匹配
+    const findOneUser = await this.userRepository.findOneBy({
+      account: userLoginInput.account,
+      password: HmacSHA512({
+        type: 'sha512',
+        key: this.configService.get('TOKEN_KEY'),
+        data: userLoginInput.password,
+      }), // 密码加密
+    });
+    if (!findOneUser) {
+      throw new HttpException({ message: '密码错误' }, 403);
+    }
+    return {
+      user: userLoginInput.account,
+      token: 'token',
+    };
   }
 }

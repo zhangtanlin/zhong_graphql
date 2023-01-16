@@ -86,6 +86,10 @@ $ npm run test:cov
 - [中文文档](http://static.kancloud.cn/juukee/nestjs/2666734)
 - [参考使用文档](https://www.programcreek.com/typescript/?code=Sairyss%2Fdomain-driven-hexagon%2Fdomain-driven-hexagon-master%2Fsrc%2Fmodules%2Fuser%2Fqueries%2Ffind-users%2Ffind-users.graphql-resolver.ts#)
 
+## 其他文档
+- [中國歷代人物傳記資料庫](https://projects.iq.harvard.edu/files/cbdb/files/zhong_guo_li_dai_ren_wu_chuan_ji_zi_liao_ku_yong_hu_zhi_nan_.pdf)
+- [国际城市代码](http://www.caneis.com.tw/home/information/citycode.htm)
+
 ## 联系方式
 - 作者 - [苴国仲霖](https://juguozhonglin.com)
 - qq - [136179160](https://juguozhonglin.com/)

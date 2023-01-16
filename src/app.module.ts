@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 // entity
 import allEntity from './common/allEntity';
 import { join } from 'path';
+import { CountryModule } from './country/country.module';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { join } from 'path';
       envFilePath: [`./env/.env.${process.env.NODE_ENV}`],
     }),
     /**
-     * 导入
+     * 导入typeorm并配置连接参数
      * @require GraphQLModule graphql模块
      * @require AuthorsModule 作者
      * @require PostsModule   帖子
@@ -68,6 +69,7 @@ import { join } from 'path';
     }),
     PostsModule,
     UserModule,
+    CountryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

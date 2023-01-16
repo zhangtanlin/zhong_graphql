@@ -1,10 +1,12 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { ResourceEntity } from 'src/resource/resource.entity';
 import { UserEntity } from 'src/user/user.entity';
 import {
+  BaseEntity,
   Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -14,7 +16,7 @@ import {
  */
 @ObjectType()
 @Entity('role')
-export class RoleEntity {
+export class RoleEntity extends BaseEntity {
   // 用户id(自增id)
   @Field(() => Int, { nullable: true })
   @PrimaryGeneratedColumn()
@@ -44,11 +46,14 @@ export class RoleEntity {
   })
   description: string;
 
-  // 是否是初始化值（缺省）【 0 ：不是， 1 ：是】
+  /**
+   * 是否是初始化值(缺省)
+   * @description {0:不是,1:是}
+   */
   @Field(() => Int, { nullable: true })
   @Column({
     name: 'default_flag',
-    default: 0,
+    default: 1,
   })
   defaultFlag: number;
 
@@ -60,9 +65,32 @@ export class RoleEntity {
   })
   resources: string;
 
-  // 用户
-  @Field(() => UserEntity, { nullable: true })
-  @ManyToOne(() => UserEntity, (user) => user.roleList)
-  @JoinColumn({ name: 'user_roles' })
-  user: UserEntity;
+  /**
+   * 对应的用户列表(多个用户对应多个角色)
+   * 注意1:@JoinTable()是@ManyToMany()关系所必需的,必须把@JoinTable放在关系的一个(拥有)方面.
+   * 注意2:@JoinColumn()是@ManyToOne()/@OneToMany()关系所必需的,会在单一关系表内添加一列作为关系列.
+   */
+  @Field(() => [UserEntity], { nullable: true })
+  @ManyToMany(() => UserEntity, (user) => user.roleList)
+  @JoinTable({
+    name: 'user_role',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'role_id',
+      referencedColumnName: 'id',
+    },
+  })
+  userList: UserEntity[];
+
+  /**
+   * 对应的资源列表(多个角色对应多个资源)
+   * 注意1:@JoinTable()是@ManyToMany()关系所必需的,必须把@JoinTable放在关系的一个(拥有)方面.
+   * 注意2:@JoinColumn()是@ManyToOne()/@OneToMany()关系所必需的,会在单一关系表内添加一列作为关系列.
+   */
+  @Field(() => [ResourceEntity], { nullable: true })
+  @ManyToMany(() => ResourceEntity, (resource) => resource.roleList)
+  resourceList: ResourceEntity[];
 }
