@@ -44,7 +44,7 @@ export class CountryEntity extends BaseEntity {
    * 注意1:@JoinTable()是@ManyToMany()关系所必需的,必须把@JoinTable放在关系的一个(拥有)方面.
    * 注意2:@JoinColumn()是@ManyToOne()/@OneToMany()关系所必需的,会在单一关系表内添加一列作为关系列.
    */
-  @Field(() => CityEntity)
+  @Field(() => [CityEntity])
   @OneToMany(() => CityEntity, (city) => city.country)
   cityList: CityEntity[];
 }

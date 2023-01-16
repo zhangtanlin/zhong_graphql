@@ -15,7 +15,7 @@ type CityEntity {
 }
 
 type CountryEntity {
-  cityList: CityEntity!
+  cityList: [CityEntity!]!
   code: String!
   id: Int
   name: String!
