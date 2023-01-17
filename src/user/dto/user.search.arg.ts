@@ -3,7 +3,7 @@ import { IsOptional, IsString } from 'class-validator';
 
 // 搜索用户必填和选填的参数
 @ArgsType()
-export class UserSearchArgs {
+export class UserSearchArg {
   @Field(() => String, { nullable: true })
   @IsString()
   account: string;

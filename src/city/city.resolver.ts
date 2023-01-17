@@ -1,5 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
+import { IdArg } from 'src/common/dto/id.arg';
 import { CityEntity } from './city.entity';
 import { CityService } from './city.service';
 import { CityCreateInput } from './dto/city.create.input';
@@ -12,7 +13,7 @@ export class CityResolver {
   @Query(() => [CityEntity])
   async CityFindAll() {
     try {
-      const _res = await this.cityService.findAll();
+      const _res: CityEntity[] = await this.cityService.findAll();
       return _res;
     } catch (error) {
       throw new HttpException({ message: '查询所有数据失败' }, 502);
@@ -23,9 +24,9 @@ export class CityResolver {
    * @return CityEntity 根据grqphql模式返回
    */
   @Query(() => CityEntity)
-  async cityFindOneById(@Args('id') id: number) {
+  async cityFindOneById(@Args() arg: IdArg) {
     try {
-      return await this.cityService.findOneById(id);
+      return await this.cityService.findOneById(arg);
     } catch (error) {
       throw new HttpException({ message: '根据id查询一条数据失败' }, 502);
     }

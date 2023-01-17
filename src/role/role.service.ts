@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ResourceService } from '../resource/resource.service';
 import { In, Repository } from 'typeorm';
 import { RoleEntity } from './role.entity';
+import { IdArg } from 'src/common/dto/id.arg';
+import { RoleCreateInput } from './dto/role.create.input';
+import { RoleSearchArg } from './dto/role.search.arg';
 
 @Injectable()
 export class RoleService {
@@ -18,7 +21,7 @@ export class RoleService {
    * @function findOneByAccount 验证账号是否存在
    * @function save             保存用户信息
    */
-  async create(data: RoleEntity): Promise<RoleEntity> {
+  async create(data: RoleCreateInput): Promise<RoleEntity> {
     try {
       const _role: RoleEntity = await this.roleRepository.save(data);
       return _role;
@@ -60,9 +63,9 @@ export class RoleService {
    * 根据id查询一条数据
    * @function id 查询的id
    */
-  async findOneById(id: number): Promise<RoleEntity> {
+  async findOneById(arg: IdArg): Promise<RoleEntity> {
     try {
-      const _user: RoleEntity = await this.roleRepository.findOneBy({ id });
+      const _user: RoleEntity = await this.roleRepository.findOneBy(arg);
       return _user;
     } catch (error) {
       throw new HttpException({ message: '根据id查询角色失败' }, 502);
@@ -96,6 +99,16 @@ export class RoleService {
       return cb;
     } catch (error) {
       throw new HttpException({ message: '根据id数组查询角色失败' }, 502);
+    }
+  }
+
+  // 根据查询条件查询一条数据
+  async findOne(arg: RoleSearchArg): Promise<RoleEntity> {
+    try {
+      const _user: RoleEntity = await this.roleRepository.findOneBy(arg);
+      return _user;
+    } catch (error) {
+      throw new HttpException({ message: '查询角色失败' }, 502);
     }
   }
 }

@@ -42,9 +42,9 @@ type Mutation {
   cityCreate(input: CityCreateInput!): CityEntity!
   countryCreate(input: CountryCreateInput!): CountryEntity!
   createPosts(postsInputDto: PostsInputDto!): PostsDto!
-  resourceCreate(resourceInputDto: ResourceInputDto!): ResourceDto!
-  roleCreate(roleCreateInput: RoleCreateInput!): RoleEntity!
-  userCreate(userCreateDto: UserCreateInput!): UserEntity!
+  resourceCreate(input: ResourceCreateInput!): ResourceEntity!
+  roleCreate(role: RoleCreateInput!, user: UserCreateInput!): RoleEntity!
+  userCreate(input: UserCreateInput!): UserEntity!
 }
 
 type PostsDto {
@@ -60,28 +60,27 @@ input PostsInputDto {
 
 type Query {
   CityFindAll: [CityEntity!]!
-  cityFindOneById(id: Float!): CityEntity!
+  cityFindOneById(id: Int!): CityEntity!
   countryFindAll: [CountryEntity!]!
   countryFindOneById(id: Int!): CountryEntity!
-  login(userLoginInput: UserLoginInput!): UserLoginResult!
+  login(input: UserLoginInput!): UserLoginResult!
   posts: String!
   postsFindAll: [PostsDto!]!
   postsFindOneById(id: Float!): PostsDto!
-  resourceFindAll: [ResourceDto!]!
-  resourceFindOneById(id: Float!): ResourceDto!
+  resourceFindAll: [ResourceEntity!]!
+  resourceFindOneById(id: Int!): ResourceEntity!
   roleFindAll: [RoleEntity!]!
-  roleFindOneById(id: Float!): RoleEntity!
+  roleFindOneById(id: Int!): RoleEntity!
   userFindAll: [UserEntity!]!
   userFindByPaging(page: Int!, size: Int = 10): [UserEntity!]!
-  userFindOneById(id: Float!): UserEntity!
+  userFindOneById(id: Int!): UserEntity!
 }
 
-type ResourceDto {
+input ResourceCreateInput {
   alias: String!
   description: String!
   href: String!
   icon: String!
-  id: ID!
   isNavigation: Float!
   isShow: Float!
   name: String!
@@ -107,33 +106,20 @@ type ResourceEntity {
   type: Int
 }
 
-input ResourceInputDto {
-  alias: String!
-  description: String!
-  href: String!
-  icon: String!
-  isNavigation: Float!
-  isShow: Float!
-  name: String!
-  permission: String!
-  pid: Float!
-  target: String!
-  type: Float!
-}
-
 input RoleCreateInput {
-  defaultFlag: Float!
-  description: String!
+  alias: String
+  defaultFlag: Int
+  description: String
   name: String!
-  resources: String!
-  roleType: Float!
+  roleType: Int
 }
 
 type RoleEntity {
+  alias: String
   defaultFlag: Int
   description: String
   id: Int
-  name: String
+  name: String!
   resourceList: [ResourceEntity!]
   resources: String
   roleType: Int

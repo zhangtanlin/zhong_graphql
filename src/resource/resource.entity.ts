@@ -139,16 +139,5 @@ export class ResourceEntity extends BaseEntity {
    */
   @Field(() => [RoleEntity], { nullable: true })
   @ManyToMany(() => RoleEntity, (role) => role.resourceList)
-  @JoinTable({
-    name: 'role_resource',
-    joinColumn: {
-      name: 'role_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'resource_id',
-      referencedColumnName: 'id',
-    },
-  })
   roleList: RoleEntity[];
 }

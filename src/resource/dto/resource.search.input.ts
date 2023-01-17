@@ -4,7 +4,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
  * 查询
  */
 @ObjectType()
-export class ResourceDto {
+export class ResourceSearchInput {
   @Field(() => ID)
   id: number;
 

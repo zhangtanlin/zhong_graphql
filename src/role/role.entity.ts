@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { IsNotEmpty } from 'class-validator';
 import { ResourceEntity } from 'src/resource/resource.entity';
 import { UserEntity } from 'src/user/user.entity';
 import {
@@ -22,14 +23,23 @@ export class RoleEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // 名称
+  // 名称(通常为英文,便于查询)
+  @Field(() => String)
+  @IsNotEmpty({ message: '角色名称不能为空' })
+  @Column({
+    type: 'varchar',
+    length: 255,
+  })
+  name: string;
+
+  // 别名(通常为中文)
   @Field(() => String, { nullable: true })
   @Column({
     type: 'varchar',
     length: 255,
     default: '',
   })
-  name: string;
+  alias: string;
 
   // 类型【 0 ：超级管理员， 1 ：系统管理员， 2 ：操作员， 3 ：审计员】
   @Field(() => Int, { nullable: true })
@@ -52,7 +62,8 @@ export class RoleEntity extends BaseEntity {
    */
   @Field(() => Int, { nullable: true })
   @Column({
-    name: 'default_flag',
+    type: 'enum',
+    enum: [0, 1],
     default: 1,
   })
   defaultFlag: number;
@@ -72,18 +83,7 @@ export class RoleEntity extends BaseEntity {
    */
   @Field(() => [UserEntity], { nullable: true })
   @ManyToMany(() => UserEntity, (user) => user.roleList)
-  @JoinTable({
-    name: 'user_role',
-    joinColumn: {
-      name: 'user_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'role_id',
-      referencedColumnName: 'id',
-    },
-  })
-  userList: UserEntity[];
+  userList?: UserEntity[];
 
   /**
    * 对应的资源列表(多个角色对应多个资源)
@@ -92,5 +92,16 @@ export class RoleEntity extends BaseEntity {
    */
   @Field(() => [ResourceEntity], { nullable: true })
   @ManyToMany(() => ResourceEntity, (resource) => resource.roleList)
-  resourceList: ResourceEntity[];
+  @JoinTable({
+    name: 'role_resource',
+    joinColumn: {
+      name: 'role_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'resource_id',
+      referencedColumnName: 'id',
+    },
+  })
+  resourceList?: ResourceEntity[];
 }

@@ -1,5 +1,6 @@
 import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
-import { PagingArgs } from 'src/common/dto/paging.args';
+import { IdArg } from 'src/common/dto/id.arg';
+import { PagingArgs } from 'src/common/dto/paging.arg';
 import { UserCreateInput } from './dto/user.create.input';
 import { UserLoginInput } from './dto/user.login.input';
 import { UserLoginResult } from './dto/user.login.result';
@@ -18,23 +19,21 @@ export class UserResolver {
 
   // 分页查询
   @Query(() => [UserEntity])
-  async userFindByPaging(
-    @Args() pagingArgs: PagingArgs,
-  ): Promise<UserEntity[]> {
-    const _list: UserEntity[] = await this.userService.findByPaging(pagingArgs);
+  async userFindByPaging(@Args() args: PagingArgs): Promise<UserEntity[]> {
+    const _list: UserEntity[] = await this.userService.findByPaging(args);
     return _list;
   }
 
   // 查询一条
   @Query(() => UserEntity)
-  async userFindOneById(@Args('id') id: number) {
-    return await this.userService.findOneById(id);
+  async userFindOneById(@Args() arg: IdArg) {
+    return await this.userService.findOneById(arg);
   }
 
   // 登录
   @Query(() => UserLoginResult)
-  async login(@Args('userLoginInput') userLoginInput: UserLoginInput) {
-    return await this.userService.login(userLoginInput);
+  async login(@Args('input') input: UserLoginInput) {
+    return await this.userService.login(input);
   }
 
   /**
@@ -46,9 +45,7 @@ export class UserResolver {
    * @description 这里的dto如果是使用 @ArgsType 定义,使用写法是`@Args() userCreateDto: UserCreateDto`,如果使用 @InputType 定义,使用写法是`@Args('userCreateDto') userCreateDto: UserCreateDto`.特别注意的是请求格式也会有不同.
    */
   @Mutation(() => UserEntity)
-  async userCreate(
-    @Args('userCreateDto') userCreateDto: UserCreateInput,
-  ): Promise<UserEntity> {
-    return await this.userService.createUser(userCreateDto);
+  async userCreate(@Args('input') input: UserCreateInput): Promise<UserEntity> {
+    return await this.userService.create(input);
   }
 }

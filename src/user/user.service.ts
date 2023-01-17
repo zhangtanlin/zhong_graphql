@@ -3,12 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { UserCreateInput } from './dto/user.create.input';
-import { PagingArgs } from 'src/common/dto/paging.args';
+import { PagingArgs } from 'src/common/dto/paging.arg';
 import { UserLoginInput } from './dto/user.login.input';
 import { UserLoginResult } from './dto/user.login.result';
 import { ConfigService } from '@nestjs/config';
 import { HmacSHA512 } from 'src/common/utils/cryptoData';
-import { RoleEntity } from 'src/role/role.entity';
+import { IdArg } from 'src/common/dto/id.arg';
+import { UserAccountArg } from './dto/user.account.arg';
 
 @Injectable()
 export class UserService {
@@ -24,26 +25,48 @@ export class UserService {
    * @function createUser   验证账号是否存在
    * @function save             保存用户信息
    */
-  async createUser(userCreateDto: UserCreateInput): Promise<UserEntity> {
+  async create(input: UserCreateInput): Promise<UserEntity> {
     try {
-      // 设置资源
-      const _roleOne: RoleEntity = new RoleEntity();
-      _roleOne.id = 1;
-      const _roleList: RoleEntity[] = [_roleOne];
+      // 第一次初始化判定是否有用户(如果有就创建普通用户,如果没有就创建一个超级管理员用户)
+      const verifyInit: UserEntity = await this.userRepository.findOneBy({
+        account: 'root',
+      });
+      if (!verifyInit) {
+        const enCryptPassword: string = HmacSHA512({
+          type: 'sha512',
+          key: this.configService.get('TOKEN_KEY'),
+          data: 'Qaz@123456',
+        });
+        const initUser: UserCreateInput = {
+          account: 'root',
+          name: '超级管理员',
+          password: enCryptPassword,
+          phone: '18511111111',
+          email: '18511111111@126.com',
+          age: 18,
+          area_id: '110000',
+          department: '初始化超级管理员',
+          firm: '梦想在世界500强',
+        };
+        await this.userRepository.save(initUser);
+      }
+      // 判定用户是否存在
+      const verifyParam: UserAccountArg = {
+        account: input.account,
+      };
+      const verifyUser: UserEntity = await this.userRepository.findOneBy(
+        verifyParam,
+      );
+      if (verifyUser) {
+        throw new HttpException({ message: '用户已存在' }, 502);
+      }
       // 密码加密
-      userCreateDto.password = HmacSHA512({
+      input.password = HmacSHA512({
         type: 'sha512',
         key: this.configService.get('TOKEN_KEY'),
-        data: userCreateDto.password,
+        data: input.password,
       });
-      // 设置插入数据
-      const _data: UserCreateInput = {
-        ...userCreateDto,
-        ...{
-          roleList: _roleList,
-        },
-      };
-      const _user = await this.userRepository.save(_data);
+      const _user = await this.userRepository.save(input);
       return _user;
     } catch (error) {
       throw new HttpException({ message: '新增用户失败' }, 502);
@@ -70,11 +93,11 @@ export class UserService {
    * @function id 查询的id
    * @description 注意这里可以使用[findOne]和[findOneOrFail]两种方式(参数一致),建议使用[findOneOrFail].
    */
-  async findOneById(id: number): Promise<UserEntity> {
+  async findOneById(arg: IdArg): Promise<UserEntity> {
     try {
       // 根据用户id查询用户数据
       const _user: UserEntity = await this.userRepository.findOneOrFail({
-        where: { id },
+        where: arg,
         relations: ['roleList'],
       });
       return _user;

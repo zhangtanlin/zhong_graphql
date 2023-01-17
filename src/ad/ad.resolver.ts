@@ -13,16 +13,12 @@ export class AdResolver {
   async adFindAll(
     @Args('params') params: AdSearchDto,
   ): Promise<AdPagingResultDto> {
-    console.log('params', params);
-    console.log('params1', params.page);
-    console.log('params2', params.size);
     return await this.adService.getManyAndCount(params);
   }
 
   // 查询一条
   @Query(() => AdSearchDto)
   async adFindOneById(@Args('id') id: number) {
-    console.log('id', id);
     return await this.adService.findOneById(id);
   }
 

@@ -4,7 +4,7 @@ import { Field, InputType } from '@nestjs/graphql';
  * 新增
  */
 @InputType()
-export class ResourceInputDto {
+export class ResourceCreateInput {
   @Field()
   pid: number;
 

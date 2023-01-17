@@ -1,5 +1,5 @@
 import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
-import { IdDto } from 'src/common/dto/id.dto';
+import { IdArg } from 'src/common/dto/id.arg';
 import { CountryEntity } from './country.entity';
 import { CountryService } from './country.service';
 import { CountryCreateInput } from './dto/country.create.input';
@@ -18,8 +18,8 @@ export class CountryResolver {
    * @return CountryEntity 根据grqphql模式返回
    */
   @Query(() => CountryEntity)
-  async countryFindOneById(@Args() id: IdDto) {
-    return await this.countryService.findOneById(id);
+  async countryFindOneById(@Args() arg: IdArg) {
+    return await this.countryService.findOneById(arg);
   }
 
   /**

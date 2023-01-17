@@ -1,5 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IdArg } from 'src/common/dto/id.arg';
 import { CountryService } from 'src/country/country.service';
 import { Repository } from 'typeorm';
 import { CityEntity } from './city.entity';
@@ -55,11 +56,9 @@ export class CityService {
    * 根据id查询一条数据
    * @function id 查询的id
    */
-  async findOneById(id: number): Promise<CityEntity> {
+  async findOneById(arg: IdArg): Promise<CityEntity> {
     try {
-      const _find: CityEntity = await this.cityRepository.findOneBy({
-        id,
-      });
+      const _find: CityEntity = await this.cityRepository.findOneBy(arg);
       return _find;
     } catch (error) {
       throw new HttpException(error.response, error.status);

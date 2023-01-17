@@ -2,9 +2,8 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
+  JoinTable,
   ManyToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import * as Moment from 'moment';
@@ -216,21 +215,22 @@ export class UserEntity extends BaseEntity {
   firm: string;
 
   /**
-   * 对应的角色(用户和角色一对一关系)
-   */
-  @OneToOne(() => RoleEntity)
-  @JoinColumn({
-    name: 'role_id',
-    referencedColumnName: 'id',
-  })
-  role: RoleEntity;
-
-  /**
    * 对应的角色列表(多个用户对应多个角色)
    * 注意1:@JoinTable()是@ManyToMany()关系所必需的,必须把@JoinTable放在关系的一个(拥有)方面.
    * 注意2:@JoinColumn()是@ManyToOne()/@OneToMany()关系所必需的,会在单一关系表内添加一列作为关系列.
    */
   @Field(() => [RoleEntity], { nullable: true })
   @ManyToMany(() => RoleEntity, (role) => role.userList)
-  roleList: RoleEntity[];
+  @JoinTable({
+    name: 'user_role',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'role_id',
+      referencedColumnName: 'id',
+    },
+  })
+  roleList?: RoleEntity[];
 }
