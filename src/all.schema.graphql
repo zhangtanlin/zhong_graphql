@@ -9,7 +9,7 @@ input CityCreateInput {
 
 type CityEntity {
   code: String!
-  country: CountryEntity!
+  country: CityEntity!
   id: Int
   name: String!
 }
