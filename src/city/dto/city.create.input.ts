@@ -1,11 +1,17 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 // 新增
 @InputType()
 export class CityCreateInput {
-  @Field()
+  // 城市名称
+  @Field(() => String)
   name: string;
 
-  @Field()
+  // 城市代码
+  @Field(() => String)
   code: string;
+
+  // 城市关联的国家
+  @Field(() => Int, { nullable: true })
+  country_id: number;
 }

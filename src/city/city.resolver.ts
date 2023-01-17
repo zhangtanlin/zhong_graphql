@@ -23,7 +23,7 @@ export class CityResolver {
    * @return CityEntity 根据grqphql模式返回
    */
   @Query(() => CityEntity)
-  async postsFindOneById(@Args('id') id: number) {
+  async cityFindOneById(@Args('id') id: number) {
     try {
       return await this.cityService.findOneById(id);
     } catch (error) {
@@ -39,8 +39,7 @@ export class CityResolver {
    * @param Arg      参数-前端传过来的
    */
   @Mutation(() => CityEntity)
-  async createPosts(@Args('cityCreateInput') cityCreateInput: CityCreateInput) {
-    const create = await this.cityService.create(cityCreateInput);
-    return create;
+  async cityCreate(@Args('input') input: CityCreateInput) {
+    return await this.cityService.create(input);
   }
 }

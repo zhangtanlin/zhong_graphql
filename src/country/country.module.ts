@@ -8,5 +8,6 @@ import { CountryService } from './country.service';
 @Module({
   imports: [TypeOrmModule.forFeature([CountryEntity]), CityModule],
   providers: [CountryResolver, CountryService],
+  exports: [CountryService],
 })
 export class CountryModule {}

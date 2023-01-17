@@ -4,21 +4,33 @@
 
 input CityCreateInput {
   code: String!
+  country_id: Int
   name: String!
 }
 
 type CityEntity {
   code: String!
-  country: CityEntity!
+  country: CountryEntity!
   id: Int
   name: String!
 }
 
-type CountryEntity {
-  cityList: [CityEntity!]!
-  code: String!
-  id: Int
+input CountryCreateInput {
+  base_code: String!
+  detail_code: String!
+  is_sovereignty: Int
   name: String!
+  number_code: String!
+}
+
+type CountryEntity {
+  base_code: String!
+  cityList: [CityEntity!]
+  detail_code: String!
+  id: Int
+  is_sovereignty: Int
+  name: String!
+  number_code: String!
 }
 
 """
@@ -27,7 +39,9 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
-  createPosts(cityCreateInput: CityCreateInput!): CityEntity!
+  cityCreate(input: CityCreateInput!): CityEntity!
+  countryCreate(input: CountryCreateInput!): CountryEntity!
+  createPosts(postsInputDto: PostsInputDto!): PostsDto!
   resourceCreate(resourceInputDto: ResourceInputDto!): ResourceDto!
   roleCreate(roleCreateInput: RoleCreateInput!): RoleEntity!
   userCreate(userCreateDto: UserCreateInput!): UserEntity!
@@ -39,13 +53,20 @@ type PostsDto {
   password: String!
 }
 
+input PostsInputDto {
+  account: String!
+  password: String!
+}
+
 type Query {
   CityFindAll: [CityEntity!]!
+  cityFindOneById(id: Float!): CityEntity!
   countryFindAll: [CountryEntity!]!
+  countryFindOneById(id: Int!): CountryEntity!
   login(userLoginInput: UserLoginInput!): UserLoginResult!
   posts: String!
   postsFindAll: [PostsDto!]!
-  postsFindOneById(id: Float!): CityEntity!
+  postsFindOneById(id: Float!): PostsDto!
   resourceFindAll: [ResourceDto!]!
   resourceFindOneById(id: Float!): ResourceDto!
   roleFindAll: [RoleEntity!]!

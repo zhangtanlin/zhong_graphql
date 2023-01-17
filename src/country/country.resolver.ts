@@ -1,5 +1,5 @@
-import { HttpException } from '@nestjs/common';
 import { Mutation, Query, Resolver, Args } from '@nestjs/graphql';
+import { IdDto } from 'src/common/dto/id.dto';
 import { CountryEntity } from './country.entity';
 import { CountryService } from './country.service';
 import { CountryCreateInput } from './dto/country.create.input';
@@ -10,25 +10,16 @@ export class CountryResolver {
 
   // 查询所有
   @Query(() => [CountryEntity])
-  async countryFindAll() {
-    try {
-      const _res = await this.countryService.findAll();
-      return _res;
-    } catch (error) {
-      throw new HttpException({ message: '查询所有数据失败' }, 502);
-    }
+  async countryFindAll(): Promise<CountryEntity[]> {
+    return await this.countryService.findAll();
   }
   /**
    * 查询一条
    * @return CountryEntity 根据grqphql模式返回
    */
   @Query(() => CountryEntity)
-  async postsFindOneById(@Args('id') id: number) {
-    try {
-      return await this.countryService.findOneById(id);
-    } catch (error) {
-      throw new HttpException({ message: '根据id查询一条数据失败' }, 502);
-    }
+  async countryFindOneById(@Args() id: IdDto) {
+    return await this.countryService.findOneById(id);
   }
 
   /**
@@ -39,10 +30,7 @@ export class CountryResolver {
    * @param Arg      参数-前端传过来的
    */
   @Mutation(() => CountryEntity)
-  async createPosts(
-    @Args('countryCreateInput') countryCreateInput: CountryCreateInput,
-  ) {
-    const create = await this.countryService.create(countryCreateInput);
-    return create;
+  async countryCreate(@Args('input') input: CountryCreateInput) {
+    return await this.countryService.create(input);
   }
 }

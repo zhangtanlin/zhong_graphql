@@ -85,6 +85,7 @@ $ npm run test:cov
 ## 学习文档
 - [中文文档](http://static.kancloud.cn/juukee/nestjs/2666734)
 - [参考使用文档](https://www.programcreek.com/typescript/?code=Sairyss%2Fdomain-driven-hexagon%2Fdomain-driven-hexagon-master%2Fsrc%2Fmodules%2Fuser%2Fqueries%2Ffind-users%2Ffind-users.graphql-resolver.ts#)
+- [graphql示例文档](https://dev.to/muratas/creating-graphql-api-using-nestjs-for-multiple-databases-2h0b)
 
 ## 其他文档
 - [中國歷代人物傳記資料庫](https://projects.iq.harvard.edu/files/cbdb/files/zhong_guo_li_dai_ren_wu_chuan_ji_zi_liao_ku_yong_hu_zhi_nan_.pdf)
