@@ -1,5 +1,10 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 /**
  * 创建用户必填和选填的参数
@@ -61,4 +66,9 @@ export class UserCreateInput {
   @IsOptional()
   @IsString()
   firm?: string;
+
+  @Field(() => [Int], { nullable: true })
+  @IsOptional()
+  @IsNumberString()
+  role_id_list?: string[];
 }

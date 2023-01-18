@@ -21,7 +21,7 @@ export class RoleEntity extends BaseEntity {
   // 用户id(自增id)
   @Field(() => Int, { nullable: true })
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   // 名称(通常为英文,便于查询)
   @Field(() => String)
@@ -39,7 +39,7 @@ export class RoleEntity extends BaseEntity {
     length: 255,
     default: '',
   })
-  alias: string;
+  alias?: string;
 
   // 类型【 0 ：超级管理员， 1 ：系统管理员， 2 ：操作员， 3 ：审计员】
   @Field(() => Int, { nullable: true })
@@ -47,14 +47,14 @@ export class RoleEntity extends BaseEntity {
     name: 'role_type',
     default: 1,
   })
-  roleType: number;
+  roleType?: number;
 
   // 描述
   @Field(() => String, { nullable: true })
   @Column({
     default: '',
   })
-  description: string;
+  description?: string;
 
   /**
    * 是否是初始化值(缺省)
@@ -66,7 +66,7 @@ export class RoleEntity extends BaseEntity {
     enum: [0, 1],
     default: 1,
   })
-  defaultFlag: number;
+  defaultFlag?: number;
 
   // 角色对应的资源[用逗号分割的资源id组成的字符串]
   @Field(() => String, { nullable: true })
@@ -74,7 +74,7 @@ export class RoleEntity extends BaseEntity {
     name: 'resources',
     default: '',
   })
-  resources: string;
+  resources?: string;
 
   /**
    * 对应的用户列表(多个用户对应多个角色)

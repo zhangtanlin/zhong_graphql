@@ -10,6 +10,9 @@ import { ConfigService } from '@nestjs/config';
 import { HmacSHA512 } from 'src/common/utils/cryptoData';
 import { IdArg } from 'src/common/dto/id.arg';
 import { UserAccountArg } from './dto/user.account.arg';
+import { RoleEntity } from 'src/role/role.entity';
+import { RoleService } from 'src/role/role.service';
+import { UserUpdateInput } from './dto/user.update.input';
 
 @Injectable()
 export class UserService {
@@ -17,6 +20,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly configService: ConfigService,
+    private readonly roleService: RoleService,
   ) {}
 
   /**
@@ -27,29 +31,6 @@ export class UserService {
    */
   async create(input: UserCreateInput): Promise<UserEntity> {
     try {
-      // 第一次初始化判定是否有用户(如果有就创建普通用户,如果没有就创建一个超级管理员用户)
-      const verifyInit: UserEntity = await this.userRepository.findOneBy({
-        account: 'root',
-      });
-      if (!verifyInit) {
-        const enCryptPassword: string = HmacSHA512({
-          type: 'sha512',
-          key: this.configService.get('TOKEN_KEY'),
-          data: 'Qaz@123456',
-        });
-        const initUser: UserCreateInput = {
-          account: 'root',
-          name: '超级管理员',
-          password: enCryptPassword,
-          phone: '18511111111',
-          email: '18511111111@126.com',
-          age: 18,
-          area_id: '110000',
-          department: '初始化超级管理员',
-          firm: '梦想在世界500强',
-        };
-        await this.userRepository.save(initUser);
-      }
       // 判定用户是否存在
       const verifyParam: UserAccountArg = {
         account: input.account,
@@ -66,6 +47,37 @@ export class UserService {
         key: this.configService.get('TOKEN_KEY'),
         data: input.password,
       });
+
+      const _user = await this.userRepository.save(input);
+      return _user;
+    } catch (error) {
+      throw new HttpException({ message: '新增用户失败' }, 502);
+    }
+  }
+
+  /**
+   * 更新用户
+   */
+  async update(input: UserUpdateInput): Promise<UserEntity> {
+    try {
+      // 判定用户是否存在
+      const verifyParam: UserAccountArg = {
+        account: input.account,
+      };
+      const tempUser: UserEntity = await this.userRepository.findOneBy(
+        verifyParam,
+      );
+      if (!tempUser) {
+        throw new HttpException({ message: '用户不存在' }, 502);
+      }
+      // 密码加密
+      input.password = HmacSHA512({
+        type: 'sha512',
+        key: this.configService.get('TOKEN_KEY'),
+        data: input.password,
+      });
+      // 构造新的数据
+      tempUser.password = input.password;
       const _user = await this.userRepository.save(input);
       return _user;
     } catch (error) {

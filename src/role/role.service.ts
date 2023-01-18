@@ -6,7 +6,10 @@ import { RoleEntity } from './role.entity';
 import { IdArg } from 'src/common/dto/id.arg';
 import { RoleCreateInput } from './dto/role.create.input';
 import { RoleSearchArg } from './dto/role.search.arg';
+import { RoleUpdateInput } from './dto/role.update.input';
+import { from, map, Observable } from 'rxjs';
 
+// 角色服务
 @Injectable()
 export class RoleService {
   constructor(
@@ -17,14 +20,62 @@ export class RoleService {
 
   /**
    * 新增
-   * @class [UserInsertDto]     新增用户dto
+   * @class [UserInsertDto]     新增dto
    * @function findOneByAccount 验证账号是否存在
-   * @function save             保存用户信息
+   * @function save             保存新信息
    */
-  async create(data: RoleCreateInput): Promise<RoleEntity> {
+  // async create(data: RoleCreateInput): Observable<RoleEntity> {
+  async create(data: RoleCreateInput) {
     try {
-      const _role: RoleEntity = await this.roleRepository.save(data);
-      return _role;
+      // 验证角色是否已经存在
+      const verifyParams = {
+        name: data.name,
+      };
+      from(this.roleRepository.findOneBy(verifyParams))
+        .pipe(
+          map((role) => {
+            if (role) {
+              throw new HttpException({ message: '角色已存在' }, 502);
+            }
+          }),
+        )
+        .subscribe(
+          (next) => {
+            console.log(11111, next);
+          },
+          (result) => {
+            console.log('123', result);
+          },
+          () => {
+            console.log('456');
+          },
+        );
+      // // 保存角色
+      // const save: RoleEntity = await this.roleRepository.save(data);
+      // return save;
+    } catch (error) {
+      throw new HttpException({ message: '新增角色' }, 502);
+    }
+  }
+
+  /**
+   * 更新
+   * @param data 可选参数
+   * @returns 更新后的数据
+   */
+  async update(data: RoleUpdateInput): Promise<RoleEntity> {
+    try {
+      // 验证角色是否已经存在
+      const verifyParams = {
+        id: data.id,
+      };
+      const verifyRole = await this.roleRepository.findOneBy(verifyParams);
+      if (verifyRole) {
+        throw new HttpException({ message: '角色已存在' }, 502);
+      }
+      // 保存角色
+      const save: RoleEntity = await this.roleRepository.save(data);
+      return save;
     } catch (error) {
       throw new HttpException({ message: '新增角色' }, 502);
     }
@@ -78,25 +129,10 @@ export class RoleService {
    */
   async findByIds(ids: string[]): Promise<RoleEntity[]> {
     try {
-      const cb = [];
       const roleFindByIds: RoleEntity[] = await this.roleRepository.findBy({
         id: In(ids),
       });
-      if (roleFindByIds.length) {
-        for (const iterator of roleFindByIds) {
-          let tempFindByIds,
-            tempDto = {};
-          if (iterator.resources) {
-            const tempIds = iterator.resources.split(',').map(Number);
-            tempFindByIds = await this.resourceService.resourcesFindByIds(
-              tempIds,
-            );
-          }
-          tempDto = { ...iterator, resources: tempFindByIds || [] };
-          cb.push(tempDto);
-        }
-      }
-      return cb;
+      return roleFindByIds;
     } catch (error) {
       throw new HttpException({ message: '根据id数组查询角色失败' }, 502);
     }

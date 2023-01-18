@@ -4,6 +4,7 @@ import { PagingArgs } from 'src/common/dto/paging.arg';
 import { UserCreateInput } from './dto/user.create.input';
 import { UserLoginInput } from './dto/user.login.input';
 import { UserLoginResult } from './dto/user.login.result';
+import { UserUpdateInput } from './dto/user.update.input';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
@@ -47,5 +48,11 @@ export class UserResolver {
   @Mutation(() => UserEntity)
   async userCreate(@Args('input') input: UserCreateInput): Promise<UserEntity> {
     return await this.userService.create(input);
+  }
+
+  // 更新
+  @Mutation(() => UserEntity)
+  async userUpdate(@Args('input') input: UserUpdateInput): Promise<UserEntity> {
+    return await this.userService.update(input);
   }
 }
