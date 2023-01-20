@@ -1,4 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
+import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+import { Response } from 'express';
 
 /**
  * 异常状态码处理
@@ -12,16 +14,16 @@ import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 export class ErrorFilter<T> implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     // 获取上下文
-    const ctx = host.switchToHttp();
+    const ctx: HttpArgumentsHost = host.switchToHttp();
     // 获取请求类型(graphql所独有的)
-    const contextType = host.getType().toString();
+    const contextType: string = host.getType().toString();
     // 获取返回体
-    const response = ctx.getResponse();
-    // 判定非 GET 请求的异常返回数据格式
+    const response: Response = ctx.getResponse();
+    // 判定graphql请求异常返回数据格式
     if (contextType == 'graphql') {
       // 获取返回信息
-      const status = exception?.status; // 状态码
-      const message = exception?.response?.message; // 错误名称
+      const status: number = exception?.status || 500; // 状态码
+      const message: string = exception?.response?.message; // 错误名称
       const data = null; // 默认 data
       const timestamp = new Date().toISOString(); // 当前 UTC 时间
       // 拼装信息
