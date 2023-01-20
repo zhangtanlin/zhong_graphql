@@ -1,4 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ResourceService } from '../resource/resource.service';
 import { In, Repository } from 'typeorm';
@@ -24,38 +28,21 @@ export class RoleService {
    * @function findOneByAccount 验证账号是否存在
    * @function save             保存新信息
    */
-  // async create(data: RoleCreateInput): Observable<RoleEntity> {
-  async create(data: RoleCreateInput) {
-    try {
-      // 验证角色是否已经存在
-      const verifyParams = {
-        name: data.name,
-      };
-      from(this.roleRepository.findOneBy(verifyParams))
-        .pipe(
-          map((role) => {
-            if (role) {
-              throw new HttpException({ message: '角色已存在' }, 502);
-            }
-          }),
-        )
-        .subscribe(
-          (next) => {
-            console.log(11111, next);
-          },
-          (result) => {
-            console.log('123', result);
-          },
-          () => {
-            console.log('456');
-          },
-        );
-      // // 保存角色
-      // const save: RoleEntity = await this.roleRepository.save(data);
-      // return save;
-    } catch (error) {
-      throw new HttpException({ message: '新增角色' }, 502);
-    }
+  create(input: RoleCreateInput) {
+    // 验证角色是否已经存在
+    const verifyParams = {
+      name: input.name,
+    };
+    return from(this.roleRepository.findOneBy(verifyParams)).pipe(
+      map((data) => {
+        if (data) {
+          throw new UnprocessableEntityException();
+        } else {
+          this.roleRepository.save(input);
+          return true;
+        }
+      }),
+    );
   }
 
   /**
@@ -81,12 +68,7 @@ export class RoleService {
     }
   }
 
-  /**
-   * 查询所有数据
-   * @class [UserInsertDto]     dto
-   * @function findOneByAccount 验证账号是否存在
-   * @function save             保存用户信息
-   */
+  // 查询所有数据
   async findAll(): Promise<any[]> {
     try {
       const cb = [];
@@ -112,7 +94,7 @@ export class RoleService {
 
   /**
    * 根据id查询一条数据
-   * @function id 查询的id
+   * @function arg 查询的id
    */
   async findOneById(arg: IdArg): Promise<RoleEntity> {
     try {

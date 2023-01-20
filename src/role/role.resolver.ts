@@ -25,7 +25,7 @@ export class RoleResolver {
    * @param Arg 参数-前端传过来的
    */
   @Mutation(() => RoleEntity)
-  async roleCreate(@Args('role') role: RoleCreateInput) {
-    return await this.roleService.create(role);
+  roleCreate(@Args('input') input: RoleCreateInput) {
+    return this.roleService.create(input);
   }
 }

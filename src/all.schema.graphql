@@ -43,7 +43,7 @@ type Mutation {
   countryCreate(input: CountryCreateInput!): CountryEntity!
   createPosts(postsInputDto: PostsInputDto!): PostsDto!
   resourceCreate(input: ResourceCreateInput!): ResourceEntity!
-  roleCreate(role: RoleCreateInput!): RoleEntity!
+  roleCreate(input: RoleCreateInput!): RoleEntity!
   userCreate(input: UserCreateInput!): UserEntity!
   userUpdate(input: UserUpdateInput!): UserEntity!
 }

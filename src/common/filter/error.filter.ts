@@ -10,36 +10,32 @@ import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
  */
 @Catch()
 export class ErrorFilter<T> implements ExceptionFilter {
-  catch(exception, host: ArgumentsHost) {
+  catch(exception: any, host: ArgumentsHost) {
     // 获取上下文
     const ctx = host.switchToHttp();
-    // 获取请求体
-    const request = ctx.getRequest();
+    // 获取请求类型(graphql所独有的)
+    const contextType = host.getType().toString();
     // 获取返回体
     const response = ctx.getResponse();
     // 判定非 GET 请求的异常返回数据格式
-    if (request.method !== 'GET') {
+    if (contextType == 'graphql') {
       // 获取返回信息
       const status = exception?.status; // 状态码
       const message = exception?.response?.message; // 错误名称
-      const error = exception?.response?.error; //  错误详细信息
       const data = null; // 默认 data
-      const path = request.url; // 请求地址
       const timestamp = new Date().toISOString(); // 当前 UTC 时间
       // 拼装信息
       const buildMsg = {
         code: status,
         message,
-        error,
         data,
-        path,
         timestamp,
       };
       // 记录日志
       Logger.log('错误提示', JSON.stringify(message));
       // 设置返回信息(单独设置:状态码,返回头,返回信息):
       response
-        .status(500)
+        .status(status)
         .header('Content-Type', 'application/json')
         .json(buildMsg);
     }
