@@ -38,6 +38,7 @@ export class RoleService {
         if (data) {
           throw new UnprocessableEntityException();
         } else {
+          // 保存角色
           this.roleRepository.save(input);
           return true;
         }
