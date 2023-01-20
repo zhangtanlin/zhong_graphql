@@ -1,4 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  Logger,
+} from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Response } from 'express';
 
@@ -13,31 +19,34 @@ import { Response } from 'express';
 @Catch()
 export class ErrorFilter<T> implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
-    // 获取上下文
-    const ctx: HttpArgumentsHost = host.switchToHttp();
     // 获取请求类型(graphql所独有的)
     const contextType: string = host.getType().toString();
-    // 获取返回体
-    const response: Response = ctx.getResponse();
     // 判定graphql请求异常返回数据格式
-    if (contextType == 'graphql') {
-      // 获取返回信息
-      const status: number = exception?.status || 500; // 状态码
-      const message: string = exception?.response?.message; // 错误名称
-      const data = null; // 默认 data
-      const timestamp = new Date().toISOString(); // 当前 UTC 时间
+    if (contextType === 'graphql') {
+      // 上下文
+      const ctx: HttpArgumentsHost = host.switchToHttp();
+      // 请求体
+      const request: Request = ctx.getRequest<Request>();
+      // 返回体
+      const response: Response = ctx.getResponse<Response>();
+      // 错误状态码
+      const code: number = exception.getStatus();
+      // 错误提示
+      const message: string = exception.getResponse().message;
+      // 当前UTC时间
+      const timestamp: string = new Date().toISOString();
       // 拼装信息
       const buildMsg = {
-        code: status,
+        code,
         message,
-        data,
+        data: request,
         timestamp,
       };
       // 记录日志
       Logger.log('错误提示', JSON.stringify(message));
       // 设置返回信息(单独设置:状态码,返回头,返回信息):
       response
-        .status(status)
+        .status(code)
         .header('Content-Type', 'application/json')
         .json(buildMsg);
     }
